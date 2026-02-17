@@ -16,12 +16,18 @@ import {
   Battery,
   Layers
 } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
 import { FormData, Testimonial, FAQItem } from './types';
 
 // Configuración global de contacto
 const LOGO_URL = "https://i.postimg.cc/Y9X0yj6M/logo-power-solar.png";
 const PHONE_NUMBER = "(787) 628-1344";
 const PHONE_TEL = "tel:7876281344";
+
+// Inicialización de Supabase (usará variables de entorno en Vercel)
+const supabaseUrl = (window as any).env?.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = (window as any).env?.VITE_SUPABASE_ANON_KEY || '';
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -97,14 +103,41 @@ const SolarForm = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setError(null);
+
+    try {
+      if (supabase) {
+        const { error: sbError } = await supabase
+          .from('leads')
+          .insert([
+            { 
+              name: formData.name, 
+              phone: formData.phone, 
+              email: formData.email, 
+              town: formData.town, 
+              monthly_bill: formData.monthlyBill 
+            }
+          ]);
+        
+        if (sbError) throw sbError;
+      } else {
+        // Fallback para desarrollo si no hay Supabase configurado
+        console.log('Simulando envío (Supabase no configurado):', formData);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
       setSubmitted(true);
-    }, 1500);
+    } catch (err: any) {
+      console.error('Error enviando lead:', err);
+      setError('Hubo un error al procesar tu solicitud. Por favor intenta llamar directamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -156,6 +189,8 @@ const SolarForm = () => {
             <option value="600+">Más de $600</option>
           </select>
         </div>
+
+        {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
 
         <button disabled={loading} type="submit" className="w-full bg-[#FF7A00] hover:bg-orange-600 text-white font-black py-4 rounded-xl transition-all shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 text-xl active:scale-95 disabled:opacity-70 uppercase tracking-tight">
           {loading ? "Procesando..." : "¡Orientación Gratis!"}
