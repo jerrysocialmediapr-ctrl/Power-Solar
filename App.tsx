@@ -246,7 +246,7 @@ const SolarForm = () => {
 const ProductShowcase = () => (
   <section id="productos" className="py-24 bg-white overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 text-center">
-      <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-16 uppercase italic">Tecnología de Clase Mundial</h2>
+      <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-16 uppercase italic">Tecnología Premium Quality</h2>
       <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
         <img src="https://i.postimg.cc/qRL4v7Qb/595-canadian-solar-bifacial-removebg-preview.png" alt="Panel 595W" className="w-full max-w-md mx-auto transform hover:scale-105 transition-transform" />
         <div className="text-left space-y-6">
@@ -294,13 +294,13 @@ const Hero = ({ version }: { version: number }) => {
       <div className="max-w-7xl mx-auto px-4 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left space-y-6">
           <h1 className="text-4xl md:text-7xl font-black text-slate-900 uppercase italic leading-none tracking-tighter">{headlines[version]}</h1>
-          <p className="text-xl text-slate-600 font-bold italic">Instalación rápida. Servicio local. Garantía de 25 años.</p>
+          <p className="text-xl text-slate-600 font-bold italic">Instalación rápida. Servicio y Garantía local.</p>
           <div className="inline-flex items-center gap-3 bg-orange-600 text-white px-6 py-3 rounded-2xl font-black uppercase italic animate-pulse shadow-xl">
-            <Clock /> Instalación en tiempo récord
+            <Clock /> Tiempo de Instalación; 2 semanas 
           </div>
           <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
-            <span className="bg-white border px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm"><Star className="text-yellow-500 fill-yellow-500 w-4 h-4"/> 100% Capital Local</span>
-            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold shadow-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> Aprobación Rápida</span>
+            <span className="bg-white border px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm"><Star className="text-yellow-500 fill-yellow-500 w-4 h-4"/> Financianciamiento 100% local </span>
+            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold shadow-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> Aprobación Inmediata</span>
           </div>
         </div>
         <div id="form-hero"><SolarForm /></div>
@@ -316,8 +316,8 @@ const Steps = () => (
       <div className="grid md:grid-cols-3 gap-12">
         {[
           { n: "01", t: "Orientación", d: "Evaluamos tu techo y consumo gratis." },
-          { n: "02", t: "Propuesta", d: "Diseñamos tu ahorro personalizado en 3D." },
-          { n: "03", t: "Instalación", d: "Activamos tu independencia energética." }
+          { n: "02", t: "Diseño Personalizado", d: "Diseñamos los planos de tu sistema solar antes de instarlo." },
+          { n: "03", t: "Instalación", d: "Nos encargamos no solo de la instalación, tambien de la permisologia con Luma." }
         ].map((s, i) => (
           <div key={i} className="space-y-4">
             <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-2xl font-black mx-auto shadow-2xl">{s.n}</div>
@@ -333,7 +333,7 @@ const Steps = () => (
 const FinalCTA = () => (
   <section className="py-24 bg-[#FF7A00] text-white text-center">
     <div className="max-w-4xl mx-auto px-4 space-y-8">
-      <h2 className="text-5xl md:text-7xl font-black uppercase italic leading-none">¡Dile Adiós a <span className="lightning-text">LUMA</span></h2>
+      <h2 className="text-5xl md:text-7xl font-black uppercase italic leading-none">¡Dile Adiós a <span className="lightning-text">los apagones</span></h2>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <a href="#form-hero" className="bg-white text-[#FF7A00] px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl hover:scale-105 transition-transform">Cotizar Ahora</a>
         <a href={PHONE_TEL} className="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl flex items-center justify-center gap-2 hover:bg-black transition-colors">
@@ -371,7 +371,7 @@ export default function App() {
         <FinalCTA />
       </main>
       <footer className="bg-slate-900 text-white py-12 text-center border-t border-slate-800">
-        <p className="text-slate-500 text-xs font-bold uppercase italic tracking-widest">Power Solar PR © {new Date().getFullYear()} - El Poder del Sol 🇵🇷</p>
+        <p className="text-slate-500 text-xs font-bold uppercase italic tracking-widest">Power Solar © {new Date().getFullYear()} - El Poder del Sol 🇵🇷</p>
       </footer>
       
       {/* Botones de Control para Testing (puedes ignorarlos) */}
