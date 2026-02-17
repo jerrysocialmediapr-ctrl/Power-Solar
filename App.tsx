@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Sun, 
@@ -25,31 +24,17 @@ const PHONE_NUMBER = "(787) 628-1344";
 const PHONE_TEL = "tel:7876281344";
 
 /**
- * Función segura para obtener variables de entorno.
- * Intenta obtener de process.env (Vercel/Node) o import.meta.env (Vite).
+ * En Vite + Vercel, las variables deben estar en import.meta.env
+ * y deben tener el prefijo VITE_
  */
-const getEnvVar = (key: string): string => {
-  try {
-    // Intento 1: process.env (Entorno Vercel / Producción)
-    if (typeof process !== 'undefined' && process.env && process.env[key]) {
-      return process.env[key] as string;
-    }
-    // Intento 2: import.meta.env (Entorno Vite Local)
-    const metaEnv = (import.meta as any).env;
-    if (metaEnv && metaEnv[key]) {
-      return metaEnv[key];
-    }
-  } catch (e) {
-    console.warn(`Error accediendo a la variable ${key}:`, e);
-  }
-  return '';
-};
+// Fix: Cast import.meta to any to resolve property 'env' not found error in certain TypeScript configurations
+const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
-const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
-const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
-
-// Inicialización de Supabase con validación
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+// Inicialización de Supabase con validación de existencia de llaves
+const supabase = (supabaseUrl && supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey) 
+  : null;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -148,7 +133,8 @@ const SolarForm = () => {
         
         if (sbError) throw sbError;
       } else {
-        console.log('Modo Desarrollo: Supabase no conectado. Datos:', formData);
+        // Fallback para cuando no hay conexión a DB (testing)
+        console.log('Simulación de envío:', formData);
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       setSubmitted(true);
