@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { 
   Sun, 
@@ -13,28 +14,21 @@ import {
   Plus,
   Minus,
   Battery,
-  Layers
+  Layers,
+  Wind,
+  Clock
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
-import { FormData, Testimonial, FAQItem } from './types';
+import { FormData } from './types';
 
 // Configuración global de contacto
 const LOGO_URL = "https://i.postimg.cc/Y9X0yj6M/logo-power-solar.png";
 const PHONE_NUMBER = "(787) 628-1344";
 const PHONE_TEL = "tel:7876281344";
 
-/**
- * En Vite + Vercel, las variables deben estar en import.meta.env
- * y deben tener el prefijo VITE_
- */
-// Fix: Cast import.meta to any to resolve property 'env' not found error in certain TypeScript configurations
 const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
-
-// Inicialización de Supabase con validación de existencia de llaves
-const supabase = (supabaseUrl && supabaseAnonKey) 
-  ? createClient(supabaseUrl, supabaseAnonKey) 
-  : null;
+const supabase = (supabaseUrl && supabaseAnonKey) ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,8 +64,8 @@ const Navbar = () => {
             <a href="#beneficios" className="text-slate-600 hover:text-[#FF7A00] font-semibold transition-colors uppercase text-sm tracking-wider">Beneficios</a>
             <a href="#productos" className="text-slate-600 hover:text-[#FF7A00] font-semibold transition-colors uppercase text-sm tracking-wider">Equipos</a>
             <a href="#proceso" className="text-slate-600 hover:text-[#FF7A00] font-semibold transition-colors uppercase text-sm tracking-wider">Proceso</a>
-            <a href={PHONE_TEL} className="flex items-center gap-2 bg-[#FF7A00] text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 active:scale-95">
-              <Phone className="w-4 h-4" /> {PHONE_NUMBER}
+            <a href={PHONE_TEL} className="flex items-center gap-2 bg-[#FF7A00] text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 active:scale-95 group">
+              <Phone className="w-4 h-4 group-hover:rotate-12 transition-transform" /> ¡Llamar!
             </a>
           </div>
 
@@ -83,7 +77,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 p-4 animate-in slide-in-from-top duration-300">
           <div className="flex flex-col gap-4">
@@ -91,7 +84,7 @@ const Navbar = () => {
             <a href="#productos" onClick={() => setIsOpen(false)} className="text-lg font-bold text-slate-700 p-2 uppercase tracking-tight">Equipos</a>
             <a href="#proceso" onClick={() => setIsOpen(false)} className="text-lg font-bold text-slate-700 p-2 uppercase tracking-tight">Proceso</a>
             <a href={PHONE_TEL} className="bg-[#FF7A00] text-white p-4 rounded-xl text-center font-bold flex items-center justify-center gap-2 shadow-lg">
-              <Phone className="w-5 h-5" /> Llamar Ahora
+              <Phone className="w-5 h-5" /> ¡Llamar Ahora!
             </a>
           </div>
         </div>
@@ -133,13 +126,10 @@ const SolarForm = () => {
         
         if (sbError) throw sbError;
       } else {
-        // Fallback para cuando no hay conexión a DB (testing)
-        console.log('Simulación de envío:', formData);
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       setSubmitted(true);
     } catch (err: any) {
-      console.error('Error:', err);
       setError('Error al enviar. Intenta llamar al (787) 628-1344.');
     } finally {
       setLoading(false);
@@ -163,16 +153,16 @@ const SolarForm = () => {
     <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-100">
       <div className="mb-6">
         <h3 className="text-2xl font-black text-slate-900 mb-1 uppercase">Cámbiate a Power Solar</h3>
-        <p className="text-slate-500 font-medium">Orientación y cotización 100% gratis hoy.</p>
+        <p className="text-slate-500 font-medium italic">Orientación y cotización 100% GRATIS hoy.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input required type="text" placeholder="Nombre Completo" className="w-full px-4 py-3 rounded-xl border border-slate-200" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+        <input required type="text" placeholder="Nombre Completo" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-orange-500 outline-none" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
         <div className="grid grid-cols-2 gap-4">
-          <input required type="tel" placeholder="Teléfono" className="w-full px-4 py-3 rounded-xl border border-slate-200" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
-          <input required type="text" placeholder="Pueblo" className="w-full px-4 py-3 rounded-xl border border-slate-200" value={formData.town} onChange={e => setFormData({...formData, town: e.target.value})} />
+          <input required type="tel" placeholder="Teléfono" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-orange-500 outline-none" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+          <input required type="text" placeholder="Pueblo" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-orange-500 outline-none" value={formData.town} onChange={e => setFormData({...formData, town: e.target.value})} />
         </div>
-        <input required type="email" placeholder="Email" className="w-full px-4 py-3 rounded-xl border border-slate-200" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+        <input required type="email" placeholder="Email" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-orange-500 outline-none" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
         <select required className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white" value={formData.monthlyBill} onChange={e => setFormData({...formData, monthlyBill: e.target.value})}>
           <option value="">¿Pago mensual de luz?</option>
           <option value="150-250">$150 - $250</option>
@@ -180,11 +170,17 @@ const SolarForm = () => {
           <option value="400-600">$400 - $600</option>
           <option value="600+">Más de $600</option>
         </select>
+        
         {error && <p className="text-red-500 text-xs font-bold">{error}</p>}
-        <button disabled={loading} type="submit" className="w-full bg-[#FF7A00] text-white font-black py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xl active:scale-95 uppercase">
-          {loading ? "Enviando..." : "¡Orientación Gratis!"}
+        
+        <button disabled={loading} type="submit" className="w-full bg-[#FF7A00] text-white font-black py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xl active:scale-95 uppercase hover:bg-orange-600 transition-colors">
+          {loading ? "Procesando..." : "¡Solicitar Cotización!"}
           <ArrowRight className="w-6 h-6" />
         </button>
+        
+        <p className="text-[10px] text-slate-400 leading-tight text-center mt-4">
+          Al presionar el botón, usted acepta ser contactado por uno de nuestros expertos de Power Solar para coordinar una cita para orientación y cotización completamente GRATIS. Sus datos están protegidos.
+        </p>
       </form>
     </div>
   );
@@ -195,43 +191,69 @@ const ProductShowcase = () => {
     <section id="productos" className="py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-20">
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 uppercase italic">Tecnología Sin Precedentes</h2>
-          <p className="text-slate-500 text-lg font-medium">Equipos certificados para Puerto Rico.</p>
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 uppercase italic">Tecnología Premium Quality</h2>
+          <p className="text-slate-500 text-lg font-medium">Equipos certificados y probados para el clima de Puerto Rico.</p>
         </div>
+
+        {/* Panel Solar de 595W */}
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
           <div className="relative group flex justify-center">
             <div className="absolute inset-0 bg-orange-100 rounded-full blur-3xl opacity-30"></div>
-            <img src="https://i.postimg.cc/qRL4v7Qb/595-canadian-solar-bifacial-removebg-preview.png" alt="Panel 595W" className="relative z-10 w-full h-auto object-contain transform group-hover:scale-105 transition-transform" />
+            <img 
+              src="https://i.postimg.cc/qRL4v7Qb/595-canadian-solar-bifacial-removebg-preview.png" 
+              alt="Panel Solar de 595W" 
+              className="relative z-10 w-full max-w-md h-auto object-contain transform group-hover:scale-105 transition-transform" 
+            />
           </div>
           <div className="space-y-8">
-            <h3 className="text-4xl font-black text-slate-900 uppercase">Paneles 595W Bifacial</h3>
-            <p className="text-slate-600 text-lg font-medium">Generación extrema. Captura energía por ambos lados para darte más potencia en menos espacio.</p>
+            <div className="inline-block bg-orange-100 text-[#FF7A00] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Tecnología Lider</div>
+            <h3 className="text-4xl font-black text-slate-900 uppercase">Panel Solar de 595W Bifacial</h3>
+            <p className="text-slate-600 text-lg font-medium">No todos los paneles son iguales. No es cantidad de paneles sino lo que cada uno produce. Nuestra placa de 595W es la de mayor producción disponible en la isla.</p>
             <ul className="grid gap-4">
               <li className="flex gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 italic">
-                <Layers className="text-[#FF7A00]" /> 595 Watts: Máxima potencia por panel.
+                <Layers className="text-[#FF7A00] shrink-0" /> 
+                <span><strong>Generación Bifacial:</strong> Captura luz por ambos lados (reflejo del techo), produciendo hasta un 30% más energía.</span>
               </li>
               <li className="flex gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 italic">
-                <ShieldCheck className="text-[#FF7A00]" /> Resistencia a Huracanes certificada.
+                <Wind className="text-[#FF7A00] shrink-0" /> 
+                <span><strong>Resistencia Extrema:</strong> Certificación contra vientos huracanados de 175+ MPH.</span>
+              </li>
+              <li className="flex gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 italic">
+                <TrendingUp className="text-[#FF7A00] shrink-0" /> 
+                <span><strong>Alta Eficiencia:</strong> Tecnología TopCON que reduce la degradación anual, garantizando décadas de ahorro.</span>
               </li>
             </ul>
           </div>
         </div>
+
+        {/* Tesla Powerwall 3 */}
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1 space-y-8">
+            <div className="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Respaldo Inteligente</div>
             <h3 className="text-4xl font-black text-slate-900 uppercase">Tesla Powerwall 3</h3>
-            <p className="text-slate-600 text-lg font-medium">Energía ininterrumpida. La batería más avanzada con inversor solar integrado.</p>
+            <p className="text-slate-600 text-lg font-medium">Dile adiós a los apagones para siempre con el sistema de batería más confiable del mundo.</p>
             <ul className="grid gap-4">
               <li className="flex gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 italic">
-                <Battery className="text-[#FF7A00]" /> Respaldo total para toda tu casa.
+                <Zap className="text-[#FF7A00] shrink-0" /> 
+                <span><strong>Inversor Integrado:</strong> Sistema todo-en-uno de alta eficiencia que maximiza la carga solar.</span>
               </li>
               <li className="flex gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 italic">
-                <Zap className="text-[#FF7A00]" /> Cambio instantáneo al irse la luz.
+                <Battery className="text-[#FF7A00] shrink-0" /> 
+                <span><strong>Backup Total:</strong> Capacidad para encender acondicionadores de aire y cisternas sin interrupciones.</span>
+              </li>
+              <li className="flex gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 italic">
+                <ShieldCheck className="text-[#FF7A00] shrink-0" /> 
+                <span><strong>Storm Watch:</strong> Se comunica con el servicio meteorológico para cargar al 100% antes de una tormenta.</span>
               </li>
             </ul>
           </div>
           <div className="order-1 lg:order-2 relative group flex justify-center">
             <div className="absolute inset-0 bg-blue-100 rounded-full blur-3xl opacity-20"></div>
-            <img src="https://i.postimg.cc/L4wLH0PH/Tesla-Powerwall-3-transparente.png" alt="Tesla PW3" className="relative z-10 w-[55%] h-auto object-contain transform group-hover:scale-105 transition-transform" />
+            <img 
+              src="https://i.postimg.cc/L4wLH0PH/Tesla-Powerwall-3-transparente.png" 
+              alt="Tesla Powerwall 3" 
+              className="relative z-10 w-[60%] h-auto object-contain transform group-hover:scale-105 transition-transform" 
+            />
           </div>
         </div>
       </div>
@@ -241,9 +263,9 @@ const ProductShowcase = () => {
 
 const Hero = ({ version }: { version: number }) => {
   const headlines = [
-    "¡Libérate de los apagones con Power Solar! 🇵🇷",
-    "Paga tus Placas con lo mismo que le das a LUMA 💡",
-    "La Mejor Tecnología: Paneles 595W + Powerwall 3 ☀️"
+    "¡Libérate de los apagones desde hoy con Power Solar! 🇵🇷",
+    "Paga tus Placas con el mismo dinero de tu factura de luz 💡",
+    "Tecnología de Punta: Panel Solar de 595w + Powerwall 3 ☀️"
   ];
   return (
     <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-slate-50 overflow-hidden">
@@ -253,14 +275,25 @@ const Hero = ({ version }: { version: number }) => {
             {headlines[version]}
           </h1>
           <p className="text-lg md:text-2xl text-slate-600 font-semibold italic">
-            Toma el control hoy con <span className="text-[#FF7A00]">Power Solar</span>. $0 pronto y garantía 100% local.
+            Toma control de la energía con <span className="text-[#FF7A00]">Power Solar</span>. Aprobación inmediata
           </p>
-          <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
-            <span className="bg-white px-4 py-2 rounded-full border border-slate-200 text-xs font-bold uppercase tracking-widest shadow-sm flex items-center gap-2">
-              <CheckCircle2 className="text-green-500 w-4 h-4" /> $0 Pronto
-            </span>
-            <span className="bg-white px-4 py-2 rounded-full border border-slate-200 text-xs font-bold uppercase tracking-widest shadow-sm flex items-center gap-2">
-              <CheckCircle2 className="text-green-500 w-4 h-4" /> Equipos 595W
+          
+          {/* Badge de Urgencia Destacado */}
+          <div className="inline-flex items-center gap-3 bg-orange-600 text-white px-6 py-3 rounded-2xl font-black text-lg uppercase italic shadow-xl animate-pulse transform -rotate-1">
+            <Clock className="w-6 h-6" /> Instalación en menos de 2 semanas
+          </div>
+
+          <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-6">
+            <div className="flex flex-col gap-2">
+              <span className="bg-white px-4 py-2 rounded-full border border-slate-200 text-xs font-bold uppercase tracking-widest shadow-sm flex items-center gap-2 w-fit">
+                <Star className="text-yellow-500 w-4 h-4 fill-yellow-500" /> Financiamiento 100% Local
+              </span>
+              <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full font-bold text-xs uppercase tracking-widest flex items-center gap-2 w-fit shadow-sm">
+                <CheckCircle2 className="w-4 h-4" /> 100% Garantía Local
+              </span>
+            </div>
+            <span className="bg-white px-4 py-2 rounded-full border border-slate-200 text-xs font-bold uppercase tracking-widest shadow-sm flex items-center gap-2 h-fit">
+              <Sun className="text-[#FF7A00] w-4 h-4" /> Panel Solar de 595w
             </span>
           </div>
         </div>
@@ -273,14 +306,14 @@ const Hero = ({ version }: { version: number }) => {
 };
 
 const Steps = () => (
-  <section id="proceso" className="py-24 bg-white">
+  <section id="proceso" className="py-24 bg-white border-y border-slate-100">
     <div className="max-w-7xl mx-auto px-4 text-center">
-      <h2 className="text-3xl md:text-5xl font-black mb-16 uppercase italic">Tu Ruta al Ahorro</h2>
+      <h2 className="text-3xl md:text-5xl font-black mb-16 uppercase italic">Tu Camino a la Independencia</h2>
       <div className="grid md:grid-cols-3 gap-12">
         {[
-          { n: "01", t: "Cita Gratis", d: "Coordinamos una orientación profesional." },
-          { n: "02", t: "Diseño 3D", d: "Creamos la mejor propuesta para tu techo." },
-          { n: "03", t: "Instalación", d: "Instalamos con expertos certificados." }
+          { n: "01", t: "Orientación Gratis", d: "Coordinamos una cita para evaluar tu consumo y techo." },
+          { n: "02", t: "Diseño", d: "Creamos el diseño del sistema antes de instalarlo en tu hogar y te lo enviamos." },
+          { n: "03", t: "Respaldo Local", d: "Instalamos y brindamos servicio 100% en Puerto Rico." }
         ].map((s, i) => (
           <div key={i} className="space-y-4">
             <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-2xl font-black mx-auto shadow-xl">{s.n}</div>
@@ -293,34 +326,17 @@ const Steps = () => (
   </section>
 );
 
-const Testimonials = () => (
-  <section className="py-24 bg-slate-900 text-white">
-    <div className="max-w-7xl mx-auto px-4">
-      <h2 className="text-3xl md:text-5xl font-black text-center mb-16 uppercase italic">Clientes Satisfechos</h2>
-      <div className="grid md:grid-cols-3 gap-8">
-        {[
-          { n: "Carlos Rivera", c: "Rapidez increíble. En semanas ya estaba ahorrando." },
-          { n: "Marta González", c: "La Powerwall 3 es mágica. No más apagones." },
-          { n: "José Ortiz", c: "Los paneles de 595W son otro nivel de potencia." }
-        ].map((t, i) => (
-          <div key={i} className="bg-slate-800 p-8 rounded-3xl border border-slate-700 italic">
-            <p className="mb-6 text-lg">"{t.c}"</p>
-            <p className="font-bold text-[#FF7A00] uppercase tracking-widest text-sm">{t.n}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
 const FinalCTA = () => (
   <section className="py-24 bg-[#FF7A00] text-white text-center">
     <div className="max-w-4xl mx-auto px-4 space-y-8">
-      <h2 className="text-4xl md:text-7xl font-black uppercase italic leading-none">¿Vas a esperar al próximo apagón?</h2>
+      <h2 className="text-4xl md:text-7xl font-black uppercase italic leading-none">
+        ¡No Esperes Al Próximo <span className="lightning-text">Apagón</span>
+      </h2>
+      <p className="text-xl font-bold">Aprovecha el Financiamiento y Garantía 100% Local.</p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#form-hero" className="bg-white text-[#FF7A00] px-12 py-5 rounded-2xl font-black text-xl uppercase italic shadow-2xl">Cotizar Gratis</a>
-        <a href={PHONE_TEL} className="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl flex items-center justify-center gap-2">
-          <Phone /> {PHONE_NUMBER}
+        <a href="#form-hero" className="bg-white text-[#FF7A00] px-12 py-5 rounded-2xl font-black text-xl uppercase italic shadow-2xl hover:scale-105 transition-transform">Cotizar Gratis Ahora</a>
+        <a href={PHONE_TEL} className="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl flex items-center justify-center gap-2 hover:bg-black transition-colors group">
+          <Phone className="group-hover:animate-bounce" /> ¡Llamar Ahora!
         </a>
       </div>
     </div>
@@ -345,23 +361,30 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 selection:bg-orange-100 selection:text-orange-900">
       <Navbar />
       <main>
         <Hero version={headlineVersion} />
         <ProductShowcase />
         <Steps />
-        <Testimonials />
         <FinalCTA />
       </main>
       <footer className="bg-slate-900 text-white py-12 border-t border-slate-800 text-center">
         <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
-          Power Solar PR © {new Date().getFullYear()} - Tu Independencia Energética
+          Power Solar PR © {new Date().getFullYear()} - Expertos en Energía Solar con Garantía 100% Local 🇵🇷
         </p>
       </footer>
+      
+      {/* AB Testing UI Indicator (Solo para desarrollo/demo) */}
       <div className="fixed bottom-6 left-6 z-50 bg-white shadow-2xl rounded-2xl p-1 flex gap-1 border border-slate-200">
         {[0, 1, 2].map(v => (
-          <button key={v} onClick={() => setHeadlineVersion(v)} className={`w-8 h-8 rounded-lg text-[10px] font-black ${headlineVersion === v ? 'bg-[#FF7A00] text-white' : 'text-slate-400 hover:bg-slate-100'}`}>V{v+1}</button>
+          <button 
+            key={v} 
+            onClick={() => setHeadlineVersion(v)} 
+            className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all ${headlineVersion === v ? 'bg-[#FF7A00] text-white shadow-lg' : 'text-slate-400 hover:bg-slate-100'}`}
+          >
+            V{v+1}
+          </button>
         ))}
       </div>
     </div>

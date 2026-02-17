@@ -12,6 +12,20 @@
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
         }
+        
+        @keyframes lightning {
+            0%, 100% { color: inherit; text-shadow: none; opacity: 1; }
+            5% { color: #facc15; text-shadow: 0 0 20px #facc15; opacity: 1; }
+            7% { color: #475569; text-shadow: none; opacity: 0.5; }
+            10% { color: #facc15; text-shadow: 0 0 30px #facc15; opacity: 1; }
+            15% { color: #1e293b; text-shadow: none; opacity: 0.2; }
+            20% { color: inherit; text-shadow: none; opacity: 1; }
+        }
+
+        .lightning-text {
+            display: inline-block;
+            animation: lightning 5s linear infinite;
+        }
     </style>
 <script type="importmap">
 {
