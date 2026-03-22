@@ -53,6 +53,7 @@ const Navbar = () => {
             </a>
           </div>
           <div className="hidden md:flex items-center gap-8">
+            <a href="https://ofertas.powersolarprr.com" className="text-[#FF7A00] animate-pulse hover:text-orange-700 font-black transition-colors uppercase text-sm tracking-wider flex items-center gap-1"><Zap className="w-4 h-4" /> Ofertas Exclusivas</a>
             <a href="#productos" className="text-slate-600 hover:text-[#FF7A00] font-semibold transition-colors uppercase text-sm tracking-wider">Equipos</a>
             <a href="#proceso" className="text-slate-600 hover:text-[#FF7A00] font-semibold transition-colors uppercase text-sm tracking-wider">Proceso</a>
             <a href={PHONE_TEL} className="flex items-center gap-2 bg-[#FF7A00] text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 active:scale-95 group">
@@ -69,6 +70,7 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 p-4 animate-in slide-in-from-top duration-300">
           <div className="flex flex-col gap-4">
+            <a href="https://ofertas.powersolarprr.com" onClick={() => setIsOpen(false)} className="text-lg font-black text-[#FF7A00] p-2 uppercase flex items-center gap-2 bg-orange-50 rounded-xl"><Zap className="w-5 h-5" /> Ofertas Exclusivas</a>
             <a href="#productos" onClick={() => setIsOpen(false)} className="text-lg font-bold text-slate-700 p-2 uppercase">Equipos</a>
             <a href="#proceso" onClick={() => setIsOpen(false)} className="text-lg font-bold text-slate-700 p-2 uppercase">Proceso</a>
             <a href={PHONE_TEL} className="bg-[#FF7A00] text-white p-4 rounded-xl text-center font-bold flex items-center justify-center gap-2">
