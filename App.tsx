@@ -83,7 +83,7 @@ const Navbar = () => {
   );
 };
 
-const GOOGLE_SHEETS_URL = "";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwc0kmpjBfmierUxYzIWkfpzvY9ydeGkdbz9QSgYnyMiDVu7dwNnxG_Pl7F7BcicRDa/exec";
 
 const SolarForm = () => {
   const [formData, setFormData] = useState<FormData>({
