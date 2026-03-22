@@ -83,6 +83,8 @@ const Navbar = () => {
   );
 };
 
+const GOOGLE_SHEETS_URL = "";
+
 const SolarForm = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '', phone: '', email: '', town: '', monthlyBill: ''
