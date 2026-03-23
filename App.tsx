@@ -139,18 +139,20 @@ const SolarForm = () => {
       
       if (sbError) throw sbError;
 
-      // Paso 2: Enviar a Google Sheets
+      // Paso 2: Enviar a Google Sheets (URLEncoded para compatibilidad con no-cors)
+      const params = new URLSearchParams({
+        name: formData.name.trim(),
+        phone: formData.phone.replace(/\D/g, ''),
+        email: formData.email || '',
+        town: formData.town,
+        monthlyBill: formData.monthlyBill,
+        leadSource: 'Página Principal'
+      });
+
       await fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
         mode: 'no-cors',
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          phone: formData.phone.replace(/\D/g, ''),
-          email: formData.email || '',
-          town: formData.town,
-          monthlyBill: formData.monthlyBill,
-          leadSource: 'Página Principal'
-        })
+        body: params.toString()
       });
 
       setSubmitted(true);
