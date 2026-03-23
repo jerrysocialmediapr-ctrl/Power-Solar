@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Phone, 
@@ -83,7 +82,10 @@ const Navbar = () => {
   );
 };
 
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwc0kmpjBfmierUxYzIWkfpzvY9ydeGkdbz9QSgYnyMiDVu7dwNnxG_Pl7F7BcicRDa/exec";
+// ==========================================
+// FIX 1: URL corregida (typo: YzIWkf → YzlWkf)
+// ==========================================
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwc0kmpjBfmierUxYzlWkfpzvY9ydeGkdbz9QSgYnyMiDVu7dwNnxG_Pl7F7BcicRDa/exec";
 
 const SolarForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -115,12 +117,16 @@ const SolarForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // ==========================================
+  // FIX 2: handleSubmit ahora envía a Supabase Y a Google Sheets
+  // ==========================================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
 
     try {
+      // Paso 1: Guardar en Supabase
       const { error: sbError } = await supabase
         .from('leads')
         .insert([{ 
@@ -132,6 +138,22 @@ const SolarForm = () => {
         }]);
       
       if (sbError) throw sbError;
+
+      // Paso 2: Enviar a Google Sheets
+      await fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          phone: formData.phone.replace(/\D/g, ''),
+          email: formData.email || '',
+          town: formData.town,
+          monthlyBill: formData.monthlyBill,
+          leadSource: 'Página Principal'
+        })
+      });
+
       setSubmitted(true);
     } catch (err: any) {
       setErrors({ form: "Error de envío. Intenta de nuevo o llámanos." });
