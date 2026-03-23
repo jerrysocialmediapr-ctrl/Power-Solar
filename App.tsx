@@ -143,7 +143,6 @@ const SolarForm = () => {
       await fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name.trim(),
           phone: formData.phone.replace(/\D/g, ''),
