@@ -316,7 +316,7 @@ const ApartmentBatteries = () => (
         </ul>
         <div className="pt-4">
           <a 
-            href="https://github.com/jerrysocialmediapr-ctrl/EcoFlow-PR.git" 
+            href="https://www.ecoflow-pr.com" 
             target="_blank" 
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#FF7A00] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-95 group"
