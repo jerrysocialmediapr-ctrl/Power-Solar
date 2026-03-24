@@ -295,6 +295,48 @@ const Hero = () => {
   );
 };
 
+const ApartmentBatteries = () => (
+  <section className="py-24 bg-slate-900 text-white overflow-hidden relative">
+    <div className="absolute top-0 right-0 w-1/2 h-full bg-orange-600/10 skew-x-12 translate-x-32 hidden lg:block"></div>
+    <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center relative z-10">
+      <div className="space-y-8 text-left">
+        <div className="inline-block bg-orange-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Solución para Apartamentos</div>
+        <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none">Baterías para<br /><span className="text-[#FF7A00]">Apartamento</span></h2>
+        <p className="text-xl text-slate-300 font-medium italic">¿Vives en un apartamento y no puedes instalar placas? Tenemos la solución perfecta con sistemas portátiles de alta potencia.</p>
+        <ul className="space-y-4">
+          <li className="flex items-center gap-3 font-bold italic">
+            <CheckCircle2 className="text-[#FF7A00]" /> Sin instalación fija requerida
+          </li>
+          <li className="flex items-center gap-3 font-bold italic">
+            <CheckCircle2 className="text-[#FF7A00]" /> Carga plug-and-play en minutos
+          </li>
+          <li className="flex items-center gap-3 font-bold italic">
+            <CheckCircle2 className="text-[#FF7A00]" /> Ideal para neveras, TV y abanicos
+          </li>
+        </ul>
+        <div className="pt-4">
+          <a 
+            href="https://github.com/jerrysocialmediapr-ctrl/EcoFlow-PR.git" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-[#FF7A00] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-95 group"
+          >
+            Más Información <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
+      </div>
+      <div className="relative">
+        <div className="absolute inset-0 bg-orange-500/20 blur-[100px] rounded-full"></div>
+        <img 
+          src="https://i.postimg.cc/7P9gP93q/Delta-Pro3-frente.webp" 
+          alt="EcoFlow Delta Pro 3" 
+          className="relative z-10 w-full max-w-lg mx-auto transform hover:scale-105 transition-transform" 
+        />
+      </div>
+    </div>
+  </section>
+);
+
 const Steps = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -363,6 +405,7 @@ export default function App() {
       <main>
         <Hero />
         <ProductShowcase />
+        <ApartmentBatteries />
         <Steps />
         <FinalCTA />
       </main>
