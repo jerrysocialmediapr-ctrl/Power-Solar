@@ -426,21 +426,17 @@ const CookieConsent = () => {
   if (!show) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 animate-in slide-in-from-bottom duration-500">
-      <div className="max-w-4xl mx-auto bg-slate-900 border border-slate-700 text-white p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center gap-6">
-        <div className="flex-1 text-center md:text-left">
-          <p className="text-sm font-medium italic">
-            Utilizamos cookies para mejorar tu experiencia y medir conversiones de Google Ads. Al continuar navegando, aceptas nuestra política de cookies.
-          </p>
-        </div>
-        <div className="flex gap-4">
-          <button 
-            onClick={accept}
-            className="bg-[#FF7A00] text-white px-8 py-3 rounded-xl font-black uppercase text-sm hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-orange-500/20"
-          >
-            Aceptar
-          </button>
-        </div>
+    <div className="fixed bottom-0 left-0 right-0 z-[100] px-4 pb-4 animate-in slide-in-from-bottom duration-500">
+      <div className="max-w-7xl mx-auto bg-[#0B1C2C] text-white py-3 px-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-white/10 backdrop-blur-sm">
+        <p className="text-[13px] md:text-sm font-medium leading-tight text-center sm:text-left text-slate-200">
+          Usamos cookies para mejorar tu experiencia y mostrarte ofertas relevantes. Al continuar, aceptas su uso.
+        </p>
+        <button 
+          onClick={accept}
+          className="w-full sm:w-auto bg-[#FF7A00] hover:bg-orange-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg shadow-orange-500/20 whitespace-nowrap"
+        >
+          Aceptar
+        </button>
       </div>
     </div>
   );
