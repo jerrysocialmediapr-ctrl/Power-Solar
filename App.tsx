@@ -154,6 +154,18 @@ const SolarForm = () => {
         mode: 'no-cors'
       });
 
+      // ==========================================
+      // TRACKING: Google Ads / GTM Conversion
+      // ==========================================
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
+          event: 'generate_lead',
+          formName: 'Power Solar Website',
+          monthlyBill: formData.monthlyBill,
+          town: formData.town
+        });
+      }
+
       setSubmitted(true);
     } catch (err: any) {
       setErrors({ form: "Error de envío. Intenta de nuevo o llámanos." });
@@ -398,6 +410,42 @@ const FinalCTA = () => (
   </section>
 );
 
+const CookieConsent = () => {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('cookie-consent');
+    if (!consent) setShow(true);
+  }, []);
+
+  const accept = () => {
+    localStorage.setItem('cookie-consent', 'accepted');
+    setShow(false);
+  };
+
+  if (!show) return null;
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 animate-in slide-in-from-bottom duration-500">
+      <div className="max-w-4xl mx-auto bg-slate-900 border border-slate-700 text-white p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center gap-6">
+        <div className="flex-1 text-center md:text-left">
+          <p className="text-sm font-medium italic">
+            Utilizamos cookies para mejorar tu experiencia y medir conversiones de Google Ads. Al continuar navegando, aceptas nuestra política de cookies.
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <button 
+            onClick={accept}
+            className="bg-[#FF7A00] text-white px-8 py-3 rounded-xl font-black uppercase text-sm hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-orange-500/20"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 selection:bg-orange-100 overflow-x-hidden">
@@ -412,6 +460,7 @@ export default function App() {
       <footer className="bg-slate-900 text-white py-12 text-center border-t border-slate-800">
         <p className="text-slate-500 text-xs font-bold uppercase italic tracking-widest">Power Solar PR © {new Date().getFullYear()} - El Poder del Sol 🇵🇷</p>
       </footer>
+      <CookieConsent />
     </div>
   );
 }
