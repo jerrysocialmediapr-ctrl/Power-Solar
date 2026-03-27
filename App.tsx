@@ -85,7 +85,7 @@ const Navbar = () => {
 // ==========================================
 // FIX 1: URL corregida (typo: YzIWkf → YzlWkf)
 // ==========================================
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbydZ1lLyTp5aVUkYcd1PpI4OO4wIHYXddmtgBG6dgsDCsWlNjf-JmmMDWCThL9LGcV8/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyhGheevvRNf9zGfU_NKJYrzBsG4nWsGHhsFs_puk4S7avpSMAnKC2hu6sLPm1jeqie/exec";
 
 const SolarForm = () => {
   const [formData, setFormData] = useState<FormData>({
