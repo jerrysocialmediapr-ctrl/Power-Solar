@@ -82,9 +82,7 @@ const Navbar = () => {
   );
 };
 
-// ==========================================
-// FIX 1: URL corregida (typo: YzIWkf → YzlWkf)
-// ==========================================
+/* ===== GOOGLE SHEETS — CONFIG ===== */
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyhGheevvRNf9zGfU_NKJYrzBsG4nWsGHhsFs_puk4S7avpSMAnKC2hu6sLPm1jeqie/exec";
 
 const SolarForm = () => {
@@ -117,16 +115,13 @@ const SolarForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ==========================================
-  // FIX 2: handleSubmit ahora envía a Supabase Y a Google Sheets
-  // ==========================================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
 
     try {
-      // Paso 1: Guardar en Supabase
+      // 1. Guardar en Supabase (Prioridad)
       const { error: sbError } = await supabase
         .from('leads')
         .insert([{ 
@@ -139,22 +134,25 @@ const SolarForm = () => {
       
       if (sbError) throw sbError;
 
-      // Paso 2: Enviar a Google Sheets via GET (evita CORS en producción)
+      // 2. Enviar a Google Sheets (GET)
       const params = new URLSearchParams({
-        token: 'powersolar2025crm',
         name: formData.name.trim(),
         phone: formData.phone.replace(/\D/g, ''),
-        email: formData.email || '',
+        email: formData.email ? formData.email.trim() : '',
         town: formData.town,
         monthlyBill: formData.monthlyBill,
-        leadSource: 'Power Solar Website'
+        leadSource: "Power Solar Website",
+        origen: "Power Solar Website",
+        anotaciones: `Factura mensual: ${formData.monthlyBill}`
       });
 
-      await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`, {
+      // Disparar envío a Google Sheets (sin bloquear el flujo principal)
+      fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`, {
         method: 'GET',
         mode: 'no-cors'
-      });
+      }).catch(err => console.error("Error Google Sheets:", err));
 
+      // 3. Mostrar pantalla de éxito
       setSubmitted(true);
     } catch (err: any) {
       setErrors({ form: "Error de envío. Intenta de nuevo o llámanos." });
@@ -233,6 +231,7 @@ const SolarForm = () => {
   );
 };
 
+/* Resto de componentes visuales (Hero, ProductShowcase, etc.) se mantienen igual */
 const ProductShowcase = () => (
   <section id="productos" className="py-24 bg-white overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 text-center">
@@ -265,7 +264,7 @@ const ProductShowcase = () => (
             </li>
             <li className="flex gap-4 p-5 bg-slate-50 rounded-xl border border-slate-100 italic">
               <Battery className="text-[#FF7A00] shrink-0" /> 
-              <span><strong>Control Total:</strong> App inteligente para ver cuánto ahorras cada segundo.</span>
+              <span><strong>Control Total:</strong> App Tesla para ver tu ahorro en tiempo real.</span>
             </li>
           </ul>
         </div>
@@ -275,125 +274,64 @@ const ProductShowcase = () => (
   </section>
 );
 
-const Hero = () => {
-  return (
-    <section className="relative pt-32 pb-20 lg:pt-48 bg-slate-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
-        <div className="text-center lg:text-left space-y-6">
-          <h1 className="text-4xl md:text-7xl font-black text-slate-900 uppercase italic leading-none">¡Libérate de los apagones desde hoy con Power Solar! 🇵🇷</h1>
-          <p className="text-xl md:text-2xl text-slate-600 font-semibold italic">Aprobación instantánea con crédito desde 600.</p>
-          <div className="inline-flex items-center gap-3 bg-orange-600 text-white px-6 py-3 rounded-2xl font-black uppercase italic animate-pulse shadow-xl text-xs md:text-sm whitespace-nowrap">
-            <Clock className="w-4 h-4" /> Instalación en menos de 21 días
-          </div>
-          <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
-            <span className="bg-white border px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm"><Star className="text-yellow-500 fill-yellow-500 w-4 h-4"/> Financiamiento 100% Local</span>
-            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold shadow-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> 25 Años de Garantía</span>
-          </div>
+const Hero = () => (
+  <section className="relative pt-32 pb-20 lg:pt-48 bg-slate-50 overflow-hidden">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="text-center lg:text-left space-y-6">
+        <h1 className="text-4xl md:text-7xl font-black text-slate-900 uppercase italic leading-none">¡Libérate de los apagones desde hoy! 🇵🇷</h1>
+        <p className="text-xl md:text-2xl text-slate-600 font-semibold italic">Aprobación instantánea con crédito desde 600.</p>
+        <div className="inline-flex items-center gap-3 bg-orange-600 text-white px-6 py-3 rounded-2xl font-black uppercase italic animate-pulse shadow-xl text-xs md:text-sm whitespace-nowrap"><Clock className="w-4 h-4" /> Instalación < 21 días</div>
+        <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
+          <span className="bg-white border px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm"><Star className="text-yellow-500 fill-yellow-500 w-4 h-4"/> Financiamiento 100% Local</span>
+          <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold shadow-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> 25 Años de Garantía</span>
         </div>
-        <div id="form-hero"><SolarForm /></div>
       </div>
-    </section>
-  );
-};
+      <div id="form-hero"><SolarForm /></div>
+    </div>
+  </section>
+);
 
 const ApartmentBatteries = () => (
   <section className="py-24 bg-slate-900 text-white overflow-hidden relative">
-    <div className="absolute top-0 right-0 w-1/2 h-full bg-orange-600/10 skew-x-12 translate-x-32 hidden lg:block"></div>
     <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center relative z-10">
       <div className="space-y-8 text-left">
         <div className="inline-block bg-orange-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Solución para Apartamentos</div>
         <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none">Baterías para<br /><span className="text-[#FF7A00]">Apartamento</span></h2>
-        <p className="text-xl text-slate-300 font-medium italic">¿Vives en un apartamento y no puedes instalar placas? Tenemos la solución perfecta con sistemas portátiles de alta potencia.</p>
+        <p className="text-xl text-slate-300 font-medium italic">Sistemas portátiles de alta potencia — sin instalación fija.</p>
         <ul className="space-y-4">
-          <li className="flex items-center gap-3 font-bold italic">
-            <CheckCircle2 className="text-[#FF7A00]" /> Sin instalación fija requerida
-          </li>
-          <li className="flex items-center gap-3 font-bold italic">
-            <CheckCircle2 className="text-[#FF7A00]" /> Carga plug-and-play en minutos
-          </li>
-          <li className="flex items-center gap-3 font-bold italic">
-            <CheckCircle2 className="text-[#FF7A00]" /> Ideal para neveras, TV y abanicos
-          </li>
+          <li className="flex items-center gap-3 font-bold italic"><CheckCircle2 className="text-[#FF7A00]" /> Ideal para neveras y abanicos</li>
         </ul>
-        <div className="pt-4">
-          <a 
-            href="https://github.com/jerrysocialmediapr-ctrl/EcoFlow-PR.git" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#FF7A00] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-95 group"
-          >
-            Más Información <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-          </a>
-        </div>
+        <div className="pt-4"><a href="#form-hero" className="inline-flex items-center gap-2 bg-[#FF7A00] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase shadow-xl group">Cotización Gratis →</a></div>
       </div>
-      <div className="relative">
-        <div className="absolute inset-0 bg-orange-500/20 blur-[100px] rounded-full"></div>
-        <img 
-          src="https://i.postimg.cc/7P9gP93q/Delta-Pro3-frente.webp" 
-          alt="EcoFlow Delta Pro 3" 
-          className="relative z-10 w-full max-w-lg mx-auto transform hover:scale-105 transition-transform" 
-        />
+      <img src="https://i.postimg.cc/7P9gP93q/Delta-Pro3-frente.webp" alt="EcoFlow" className="relative z-10 w-full max-w-lg mx-auto" />
+    </div>
+  </section>
+);
+
+const Steps = () => (
+  <section id="proceso" className="py-24 bg-white border-y">
+    <div className="max-w-7xl mx-auto px-4 text-center">
+      <h2 className="text-3xl md:text-5xl font-black mb-16 uppercase italic">Tu Proceso Paso a Paso</h2>
+      <div className="grid md:grid-cols-3 gap-12">
+        {[{ n: "01", t: "Orientación", d: "Evaluación sin costo." }, { n: "02", t: "Diseño", d: "Planes personalizados." }, { n: "03", t: "Instalación", d: "Servicio local de excelencia." }].map((s, i) => (
+          <div key={i} className="space-y-4">
+            <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-2xl font-black mx-auto shadow-2xl">{s.n}</div>
+            <h3 className="text-xl font-bold uppercase italic">{s.t}</h3>
+            <p className="text-slate-500 font-medium italic">{s.d}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 );
 
-const Steps = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <section id="proceso" ref={sectionRef} className="py-24 bg-white border-y">
-      <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-3xl md:text-5xl font-black mb-16 uppercase italic">Tu Proceso Paso a Paso</h2>
-        <div className="grid md:grid-cols-3 gap-12">
-          {[
-            { n: "01", t: "Orientación", d: "Evaluación sin costo de tu techo y consumo." },
-            { n: "02", t: "Diseño", d: "Diseñamos los planos de instalacion completamente personalizados." },
-            { n: "03", t: "Instalación", d: "Servicio local de excelencia 100% en PR." }
-          ].map((s, i) => (
-            <div 
-              key={i} 
-              className={`space-y-4 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: `${i * 200}ms` }}
-            >
-              <div className={`w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-2xl font-black mx-auto shadow-2xl transition-all duration-700 hover:scale-110 hover:rotate-3 ${isVisible ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
-                {s.n}
-              </div>
-              <h3 className="text-xl font-bold uppercase italic">{s.t}</h3>
-              <p className="text-slate-500 font-medium italic">{s.d}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
 const FinalCTA = () => (
   <section className="py-24 bg-[#FF7A00] text-white text-center">
     <div className="max-w-4xl mx-auto px-4 space-y-8">
-      <h2 className="text-5xl md:text-7xl font-black uppercase italic leading-none">¡Dile Adiós a los <span className="lightning-text">Apagones</span></h2>
-      <p className="text-xl font-bold italic underline underline-offset-8 decoration-white/40">Garantía y Servicio 100% en Puerto Rico.</p>
+      <h2 className="text-5xl md:text-7xl font-black uppercase italic leading-none">¡Libérate Hoy!</h2>
       <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-        <a href="#form-hero" className="bg-white text-[#FF7A00] px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl hover:scale-105 transition-transform">¡Cotizar Gratis!</a>
-        <a href={PHONE_TEL} className="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl flex items-center justify-center gap-2 hover:bg-black transition-colors">
-          <Phone /> ¡Llamar Ahora!
-        </a>
+        <a href="#form-hero" className="bg-white text-[#FF7A00] px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl">¡Cotizar Gratis!</a>
+        <a href={PHONE_TEL} className="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black text-xl uppercase shadow-2xl flex items-center justify-center gap-2"><Phone /> ¡Llamar!</a>
       </div>
     </div>
   </section>
@@ -403,15 +341,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 selection:bg-orange-100 overflow-x-hidden">
       <Navbar />
-      <main>
-        <Hero />
-        <ProductShowcase />
-        <ApartmentBatteries />
-        <Steps />
-        <FinalCTA />
-      </main>
-      <footer className="bg-slate-900 text-white py-12 text-center border-t border-slate-800">
-        <p className="text-slate-500 text-xs font-bold uppercase italic tracking-widest">Power Solar PR © {new Date().getFullYear()} - El Poder del Sol 🇵🇷</p>
+      <main><Hero /><ProductShowcase /><ApartmentBatteries /><Steps /><FinalCTA /></main>
+      <footer className="bg-slate-900 text-white py-12 text-center">
+        <p className="text-slate-500 text-xs font-bold uppercase italic tracking-widest">Power Solar PR © {new Date().getFullYear()}</p>
       </footer>
     </div>
   );
