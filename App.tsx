@@ -85,7 +85,7 @@ const Navbar = () => {
 // ==========================================
 // FIX 1: URL corregida (typo: YzIWkf → YzlWkf)
 // ==========================================
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwc0kmpjBfmierUxYzIWkfpzvY9ydeGkdbz9QSgYnyMiDVu7dwNnxG_Pl7F7BcicRDa/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbydZ1lLyTp5aVUkYcd1PpI4OO4wIHYXddmtgBG6dgsDCsWlNjf-JmmMDWCThL9LGcV8/exec";
 
 const SolarForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -141,6 +141,7 @@ const SolarForm = () => {
 
       // Paso 2: Enviar a Google Sheets via GET (evita CORS en producción)
       const params = new URLSearchParams({
+        token: 'powersolar2025crm',
         name: formData.name.trim(),
         phone: formData.phone.replace(/\D/g, ''),
         email: formData.email || '',
@@ -153,18 +154,6 @@ const SolarForm = () => {
         method: 'GET',
         mode: 'no-cors'
       });
-
-      // ==========================================
-      // TRACKING: Google Ads / GTM Conversion
-      // ==========================================
-      if (typeof window !== 'undefined' && (window as any).dataLayer) {
-        (window as any).dataLayer.push({
-          event: 'generate_lead',
-          formName: 'Power Solar Website',
-          monthlyBill: formData.monthlyBill,
-          town: formData.town
-        });
-      }
 
       setSubmitted(true);
     } catch (err: any) {
@@ -328,7 +317,7 @@ const ApartmentBatteries = () => (
         </ul>
         <div className="pt-4">
           <a 
-            href="https://www.ecoflow-pr.com" 
+            href="https://github.com/jerrysocialmediapr-ctrl/EcoFlow-PR.git" 
             target="_blank" 
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#FF7A00] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-95 group"
@@ -410,38 +399,6 @@ const FinalCTA = () => (
   </section>
 );
 
-const CookieConsent = () => {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const consent = localStorage.getItem('cookie-consent');
-    if (!consent) setShow(true);
-  }, []);
-
-  const accept = () => {
-    localStorage.setItem('cookie-consent', 'accepted');
-    setShow(false);
-  };
-
-  if (!show) return null;
-
-  return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] px-4 pb-4 animate-in slide-in-from-bottom duration-500">
-      <div className="max-w-7xl mx-auto bg-[#0B1C2C] text-white py-3 px-6 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-white/10 backdrop-blur-sm">
-        <p className="text-[13px] md:text-sm font-medium leading-tight text-center sm:text-left text-slate-200">
-          Usamos cookies para mejorar tu experiencia y mostrarte ofertas relevantes. Al continuar, aceptas su uso.
-        </p>
-        <button 
-          onClick={accept}
-          className="w-full sm:w-auto bg-[#FF7A00] hover:bg-orange-600 text-white px-8 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg shadow-orange-500/20 whitespace-nowrap"
-        >
-          Aceptar
-        </button>
-      </div>
-    </div>
-  );
-};
-
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 selection:bg-orange-100 overflow-x-hidden">
@@ -456,7 +413,6 @@ export default function App() {
       <footer className="bg-slate-900 text-white py-12 text-center border-t border-slate-800">
         <p className="text-slate-500 text-xs font-bold uppercase italic tracking-widest">Power Solar PR © {new Date().getFullYear()} - El Poder del Sol 🇵🇷</p>
       </footer>
-      <CookieConsent />
     </div>
   );
 }
