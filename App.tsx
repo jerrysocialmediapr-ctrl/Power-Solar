@@ -16,21 +16,21 @@ import {
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { FormData } from './types';
-
+ 
 // ==========================================
 // CONFIGURACIÓN DE SUPABASE
 // ==========================================
 const SUPABASE_URL = "https://qgzfpfublkjwpgbdkwrf.supabase.co";
 const SUPABASE_KEY = "sb_publishable_jc33HIOl5H0UDhF-nR5b5g_7gxTxine";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
+ 
 const LOGO_URL = "https://i.postimg.cc/Y9X0yj6M/logo-power-solar.png";
 const PHONE_TEL = "tel:7876281344";
-
+ 
 /* ===== GOOGLE SHEETS — CONFIG ===== */
 const GOOGLE_SHEETS_URL =
   "https://script.google.com/macros/s/AKfycbyhGheevvRNf9zGfU_NKJYrzBsG4nWsGHhsFs_puk4S7avpSMAnKC2hu6sLPm1jeqie/exec";
-
+ 
 const PUERTO_RICO_TOWNS = [
   "Adjuntas", "Aguada", "Aguadilla", "Aguas Buenas", "Aibonito", "Añasco", "Arecibo", "Arroyo",
   "Barceloneta", "Barranquitas", "Bayamón", "Cabo Rojo", "Caguas", "Camuy", "Canóvanas", "Carolina",
@@ -43,10 +43,10 @@ const PUERTO_RICO_TOWNS = [
   "San Lorenzo", "San Sebastián", "Santa Isabel", "Toa Alta", "Toa Baja", "Trujillo Alto",
   "Utuado", "Vega Alta", "Vega Baja", "Vieques", "Villalba", "Yabucoa", "Yauco"
 ];
-
+ 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+ 
   return (
     <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,7 +60,7 @@ const Navbar = () => {
               />
             </a>
           </div>
-
+ 
           <div className="hidden md:flex items-center gap-8">
             <a
               href="https://ofertas.powersolarprr.com"
@@ -87,7 +87,7 @@ const Navbar = () => {
               <Phone className="w-4 h-4 group-hover:rotate-12 transition-transform" /> ¡Llamar!
             </a>
           </div>
-
+ 
           <div className="md:hidden flex items-center">
             <button onClick={() => setIsOpen(!isOpen)} className="text-slate-900">
               {isOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
@@ -95,7 +95,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
+ 
       {isOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 p-4 animate-in slide-in-from-top duration-300">
           <div className="flex flex-col gap-4">
@@ -132,7 +132,7 @@ const Navbar = () => {
     </nav>
   );
 };
-
+ 
 const SolarForm = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -147,38 +147,38 @@ const SolarForm = () => {
   const [townSearch, setTownSearch] = useState('');
   const [showTowns, setShowTowns] = useState(false);
   const townRef = useRef<HTMLDivElement>(null);
-
+ 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (townRef.current && !townRef.current.contains(event.target as Node)) {
         setShowTowns(false);
       }
     };
-
+ 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+ 
   const validate = () => {
     const newErrors: Record<string, string> = {};
     const phoneClean = formData.phone.replace(/\D/g, '');
-
+ 
     if (phoneClean.length < 10) newErrors.phone = "Número inválido";
     if (!formData.town) newErrors.town = "Requerido";
     if (!formData.name.trim()) newErrors.name = "Requerido";
     if (!formData.monthlyBill) newErrors.monthlyBill = "Requerido";
-
+ 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-
+ 
     setLoading(true);
     setErrors({});
-
+ 
     try {
       // 1. Guardar en Supabase
       const { error: sbError } = await supabase
@@ -192,9 +192,9 @@ const SolarForm = () => {
             monthly_bill: formData.monthlyBill
           }
         ]);
-
+ 
       if (sbError) throw sbError;
-
+ 
       // 2. Enviar a Google Sheets por GET sin bloquear el éxito principal
       const params = new URLSearchParams({
         name: formData.name.trim(),
@@ -206,12 +206,12 @@ const SolarForm = () => {
         origen: "Power Solar Website",
         anotaciones: `Factura mensual: ${formData.monthlyBill}`
       });
-
+ 
       fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`, {
         method: 'GET',
         mode: 'no-cors'
       }).catch((err) => console.error("Error Google Sheets:", err));
-
+ 
       setSubmitted(true);
     } catch (err) {
       setErrors({ form: "Error de envío. Intenta de nuevo o llámanos." });
@@ -219,13 +219,13 @@ const SolarForm = () => {
       setLoading(false);
     }
   };
-
+ 
   const inputClass = (field: string) => `
     w-full px-4 py-3 rounded-xl border-2 outline-none transition-all
     bg-slate-900 text-white placeholder-slate-400 font-bold
     ${errors[field] ? 'border-red-500' : 'border-slate-800 focus:border-orange-500'}
   `;
-
+ 
   if (submitted) {
     return (
       <div className="bg-white p-8 rounded-3xl shadow-2xl text-center animate-in zoom-in duration-300">
@@ -254,7 +254,7 @@ const SolarForm = () => {
       </div>
     );
   }
-
+ 
   return (
     <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-100">
       <div className="mb-6">
@@ -263,7 +263,7 @@ const SolarForm = () => {
           ¡Paga tus placas con lo mismo de la luz!
         </p>
       </div>
-
+ 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           required
@@ -272,7 +272,7 @@ const SolarForm = () => {
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         />
-
+ 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input
             required
@@ -282,7 +282,7 @@ const SolarForm = () => {
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           />
-
+ 
           <div className="relative" ref={townRef}>
             <input
               required
@@ -294,11 +294,11 @@ const SolarForm = () => {
               onChange={(e) => {
                 setTownSearch(e.target.value);
                 setShowTowns(true);
-
+ 
                 const match = PUERTO_RICO_TOWNS.find(
                   (t) => t.toLowerCase() === e.target.value.toLowerCase()
                 );
-
+ 
                 if (match) {
                   setFormData({ ...formData, town: match });
                 } else {
@@ -306,7 +306,7 @@ const SolarForm = () => {
                 }
               }}
             />
-
+ 
             {showTowns && (
               <div className="absolute z-50 w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl max-h-48 overflow-y-auto shadow-2xl">
                 {PUERTO_RICO_TOWNS.filter((t) =>
@@ -328,7 +328,7 @@ const SolarForm = () => {
             )}
           </div>
         </div>
-
+ 
         <input
           type="email"
           placeholder="Email (Opcional)"
@@ -336,7 +336,7 @@ const SolarForm = () => {
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
-
+ 
         <select
           required
           className={inputClass('monthlyBill')}
@@ -349,13 +349,13 @@ const SolarForm = () => {
           <option value="400-600">$400 - $600</option>
           <option value="600+">Más de $600</option>
         </select>
-
+ 
         {errors.form && (
           <div className="bg-red-50 text-red-600 p-3 rounded-lg text-xs font-bold flex items-center gap-2">
             <AlertCircle className="w-4 h-4" /> {errors.form}
           </div>
         )}
-
+ 
         <button
           disabled={loading}
           type="submit"
@@ -367,21 +367,21 @@ const SolarForm = () => {
     </div>
   );
 };
-
+ 
 const ProductShowcase = () => (
   <section id="productos" className="py-24 bg-white overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 text-center">
       <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-16 uppercase italic">
         Tecnología Premium Local
       </h2>
-
+ 
       <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
         <img
           src="https://i.postimg.cc/qRL4v7Qb/595-canadian-solar-bifacial-removebg-preview.png"
           alt="Panel 595W"
           className="w-full max-w-md mx-auto transform hover:scale-105 transition-transform"
         />
-
+ 
         <div className="text-left space-y-6">
           <div className="inline-block bg-orange-100 text-[#FF7A00] px-4 py-1 rounded-full text-xs font-bold uppercase">
             Potencia Extrema
@@ -403,7 +403,7 @@ const ProductShowcase = () => (
           </ul>
         </div>
       </div>
-
+ 
       <div className="grid lg:grid-cols-2 gap-16 items-center">
         <div className="text-left space-y-6 order-2 lg:order-1">
           <div className="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase">
@@ -425,7 +425,7 @@ const ProductShowcase = () => (
             </li>
           </ul>
         </div>
-
+ 
         <img
           src="https://i.postimg.cc/L4wLH0PH/Tesla-Powerwall-3-transparente.png"
           alt="Tesla Powerwall 3"
@@ -435,7 +435,7 @@ const ProductShowcase = () => (
     </div>
   </section>
 );
-
+ 
 const Hero = () => (
   <section className="relative pt-32 pb-20 lg:pt-48 bg-slate-50 overflow-hidden">
     <div className="max-w-7xl mx-auto px-4 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
@@ -443,15 +443,15 @@ const Hero = () => (
         <h1 className="text-4xl md:text-7xl font-black text-slate-900 uppercase italic leading-none">
           ¡Libérate de los apagones desde hoy! 🇵🇷
         </h1>
-
+ 
         <p className="text-xl md:text-2xl text-slate-600 font-semibold italic">
           Aprobación instantánea con crédito desde 600.
         </p>
-
+ 
         <div className="inline-flex items-center gap-3 bg-orange-600 text-white px-6 py-3 rounded-2xl font-black uppercase italic animate-pulse shadow-xl text-xs md:text-sm whitespace-nowrap">
           <Clock className="w-4 h-4" /> Instalación &lt; 21 días
         </div>
-
+ 
         <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
           <span className="bg-white border px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm">
             <Star className="text-yellow-500 fill-yellow-500 w-4 h-4" />
@@ -463,14 +463,14 @@ const Hero = () => (
           </span>
         </div>
       </div>
-
+ 
       <div id="form-hero">
         <SolarForm />
       </div>
     </div>
   </section>
 );
-
+ 
 const ApartmentBatteries = () => (
   <section className="py-24 bg-slate-900 text-white overflow-hidden relative">
     <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center relative z-10">
@@ -478,34 +478,36 @@ const ApartmentBatteries = () => (
         <div className="inline-block bg-orange-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
           Solución para Apartamentos
         </div>
-
+ 
         <h2 className="text-4xl md:text-6xl font-black uppercase italic leading-none">
           Baterías para
           <br />
           <span className="text-[#FF7A00]">Apartamento</span>
         </h2>
-
+ 
         <p className="text-xl text-slate-300 font-medium italic">
           Sistemas portátiles de alta potencia — sin instalación fija.
         </p>
-
+ 
         <ul className="space-y-4">
           <li className="flex items-center gap-3 font-bold italic">
             <CheckCircle2 className="text-[#FF7A00]" />
             Ideal para neveras y abanicos
           </li>
         </ul>
-
+ 
         <div className="pt-4">
           <a
-            href="#form-hero"
+            href="https://www.ecoflow-pr.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#FF7A00] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase shadow-xl group"
           >
             Cotización Gratis →
           </a>
         </div>
       </div>
-
+ 
       <img
         src="https://i.postimg.cc/7P9gP93q/Delta-Pro3-frente.webp"
         alt="EcoFlow"
@@ -514,14 +516,14 @@ const ApartmentBatteries = () => (
     </div>
   </section>
 );
-
+ 
 const Steps = () => (
   <section id="proceso" className="py-24 bg-white border-y">
     <div className="max-w-7xl mx-auto px-4 text-center">
       <h2 className="text-3xl md:text-5xl font-black mb-16 uppercase italic">
         Tu Proceso Paso a Paso
       </h2>
-
+ 
       <div className="grid md:grid-cols-3 gap-12">
         {[
           { n: "01", t: "Orientación", d: "Evaluación sin costo." },
@@ -540,14 +542,14 @@ const Steps = () => (
     </div>
   </section>
 );
-
+ 
 const FinalCTA = () => (
   <section className="py-24 bg-[#FF7A00] text-white text-center">
     <div className="max-w-4xl mx-auto px-4 space-y-8">
       <h2 className="text-5xl md:text-7xl font-black uppercase italic leading-none">
         ¡Libérate Hoy!
       </h2>
-
+ 
       <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
         <a
           href="#form-hero"
@@ -565,7 +567,7 @@ const FinalCTA = () => (
     </div>
   </section>
 );
-
+ 
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 selection:bg-orange-100 overflow-x-hidden">
