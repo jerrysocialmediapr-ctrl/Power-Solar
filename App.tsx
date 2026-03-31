@@ -527,8 +527,8 @@ const Steps = () => (
       <div className="grid md:grid-cols-3 gap-12">
         {[
           { n: "01", t: "Orientación", d: "Evaluación sin costo." },
-          { n: "02", t: "Diseño", d: "Planes personalizados." },
-          { n: "03", t: "Instalación", d: "Servicio local de excelencia." }
+          { n: "02", t: "Diseño", d: "Planos personalizados." },
+          { n: "03", t: "Instalación", d: "Servicio local 24/Siempre." }
         ].map((s, i) => (
           <div key={i} className="space-y-4">
             <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-2xl font-black mx-auto shadow-2xl">
