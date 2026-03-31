@@ -509,7 +509,7 @@ const ApartmentBatteries = () => (
       </div>
  
       <img
-        src="https://raw.githubusercontent.com/jerrysocialmediapr-ctrl/Power-Solar/main/DeltaPro3-frente.png"
+        src="https://cdn.jsdelivr.net/gh/jerrysocialmediapr-ctrl/Power-Solar@main/DeltaPro3-frente.png"
         alt="EcoFlow Delta Pro 3"
         className="relative z-10 w-full max-w-lg mx-auto"
       />
@@ -587,4 +587,3 @@ export default function App() {
     </div>
   );
 }
- 
